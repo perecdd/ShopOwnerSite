@@ -43,18 +43,18 @@ public interface OrdersApi {
             @ApiResponse(responseCode = "200", description = "OK", content = @Content(mediaType = "application/json", array = @ArraySchema(schema = @Schema(implementation = Order.class)))),
 
             @ApiResponse(responseCode = "400", description = "Bad Request") })
-    @RequestMapping(value = "/orders",
+    @RequestMapping(value = "/api/orders",
         produces = { "application/json" }, 
         method = RequestMethod.GET)
-    ResponseEntity<List<Order>> getOrders(@Parameter(in = ParameterIn.HEADER, description = "" ,schema=@Schema()) @RequestHeader(value="companyid", required=false) Integer companyid, @Parameter(in = ParameterIn.HEADER, description = "" ,schema=@Schema()) @RequestHeader(value="password", required=false) String password);
+    ResponseEntity<List<Order>> getOrders(@Parameter(in = ParameterIn.HEADER, description = "" ,schema=@Schema()) @RequestHeader(value="email", required=false) String email, @Parameter(in = ParameterIn.HEADER, description = "" ,schema=@Schema()) @RequestHeader(value="password", required=false) String password);
 
 
     @Operation(summary = "", description = "update order status", tags={  })
     @ApiResponses(value = { 
         @ApiResponse(responseCode = "200", description = "OK") })
-    @RequestMapping(value = "/orders",
+    @RequestMapping(value = "/api/orders",
         method = RequestMethod.PUT)
-    ResponseEntity<Void> putOrders(@Parameter(in = ParameterIn.HEADER, description = "" ,schema=@Schema()) @RequestHeader(value="companyid", required=true) Integer companyid, @Parameter(in = ParameterIn.HEADER, description = "" ,schema=@Schema()) @RequestHeader(value="password", required=true) String password, @Parameter(in = ParameterIn.HEADER, description = "" ,schema=@Schema()) @RequestHeader(value="index", required=true) Integer index, @Parameter(in = ParameterIn.HEADER, description = "" ,schema=@Schema()) @RequestHeader(value="status", required=true) String status);
+    ResponseEntity<Void> putOrders(@Parameter(in = ParameterIn.HEADER, description = "" ,schema=@Schema()) @RequestHeader(value="email", required=true) String email, @Parameter(in = ParameterIn.HEADER, description = "" ,schema=@Schema()) @RequestHeader(value="password", required=true) String password, @Parameter(in = ParameterIn.HEADER, description = "" ,schema=@Schema()) @RequestHeader(value="index", required=true) Integer index, @Parameter(in = ParameterIn.HEADER, description = "" ,schema=@Schema()) @RequestHeader(value="status", required=true) String status);
 
 }
 

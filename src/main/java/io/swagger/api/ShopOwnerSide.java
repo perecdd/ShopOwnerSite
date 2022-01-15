@@ -14,14 +14,14 @@ public class ShopOwnerSide {
     public final static String ip = "http://localhost"; // TODO http://shopownerside
     public static HttpURLConnection con;
 
-    public static JSONArray getTickets(Integer companyid, String password){
+    public static JSONArray getTickets(String email, String password){
         try {
             URL url = new URL (ip + ":" + port + "/ticketCompany");
 
             con = (HttpURLConnection)url.openConnection();
             con.setRequestProperty("Content-Type", "application/json; charset=UTF-8");
             con.setRequestProperty("Accept", "application/json");
-            con.setRequestProperty("companyid", String.valueOf(companyid));
+            con.setRequestProperty("email", email);
             con.setRequestProperty("password", password);
             con.setRequestMethod("GET");
             con.setDoOutput(true);
@@ -53,13 +53,13 @@ public class ShopOwnerSide {
         }
     }
 
-    public static boolean updateTicket(Integer companyid, String password, Integer ticket, String status) throws Exception {
+    public static boolean updateTicket(String email, String password, Integer ticket, String status) throws Exception {
             URL url = new URL(ip + ":" + port + "/ticketCompany");
             con = (HttpURLConnection) url.openConnection();
             con.setRequestProperty("User-Agent", "ShopOwnerApplication");
             con.setRequestProperty("Content-Type", "application/json; charset=UTF-8");
             con.setRequestProperty("Accept", "application/json");
-            con.setRequestProperty("companyid", String.valueOf(companyid));
+            con.setRequestProperty("email", email);
             con.setRequestProperty("password", password);
             con.setRequestProperty("ticket", String.valueOf(ticket));
             con.setRequestProperty("status", status);
@@ -72,14 +72,14 @@ public class ShopOwnerSide {
             return responseCode == 200;
     }
 
-    public static JSONArray getAllProductsByCompanyid(Integer companyid){
+    public static JSONArray getAllProductsByEmail(String email){
         try {
-            URL url = new URL (ip + ":" + port + "/storage");
+            URL url = new URL (ip + ":" + port + "/storageCompany");
 
             con = (HttpURLConnection)url.openConnection();
             con.setRequestProperty("Content-Type", "application/json; charset=UTF-8");
             con.setRequestProperty("Accept", "application/json");
-            con.setRequestProperty("companyID", String.valueOf(companyid));
+            con.setRequestProperty("companyEmail", email);
             con.setRequestMethod("GET");
             con.setDoOutput(true);
             con.setDoInput(true);
@@ -94,6 +94,8 @@ public class ShopOwnerSide {
             JSONParser parser = new JSONParser();
             JSONObject jsonObject = (JSONObject) parser.parse(sb.toString());
             JSONArray jsonArray = (JSONArray) jsonObject.get("products");
+
+            System.out.println(jsonArray.toString());
 
             int responseCode = con.getResponseCode();
             con.disconnect();
@@ -111,11 +113,35 @@ public class ShopOwnerSide {
         }
     }
 
-    public static boolean updateProducts(Integer companyid, String password, JSONObject products) throws Exception {
+    public static boolean checkCompany(String email, String password){
+        try {
+            System.out.println(email + " " + password);
+
+            URL url = new URL (ip + ":" + port + "/checkStorage");
+
+            con = (HttpURLConnection)url.openConnection();
+            con.setRequestProperty("email", email);
+            con.setRequestProperty("password", password);
+            con.setRequestMethod("GET");
+            con.setDoOutput(true);
+            con.setDoInput(true);
+
+            int responseCode = con.getResponseCode();
+            con.disconnect();
+
+            return responseCode == 200;
+        }
+        catch (Exception e){
+            e.printStackTrace();
+            return false;
+        }
+    }
+
+    public static boolean updateProducts(String email, String password, JSONObject products) throws Exception {
         URL url = new URL(ip + ":" + port + "/storage");
         con = (HttpURLConnection) url.openConnection();
         con.setRequestProperty("Content-Type", "application/json; charset=UTF-8");
-        con.setRequestProperty("companyid", String.valueOf(companyid));
+        con.setRequestProperty("email", email);
         con.setRequestProperty("password", password);
         con.setRequestMethod("PUT");
         con.setDoOutput(true);
@@ -126,7 +152,7 @@ public class ShopOwnerSide {
 
         int responseCode = con.getResponseCode();
         con.disconnect();
-        return responseCode == 200;
+        return responseCode == 202;
     }
 
     public static boolean registerCompany(Integer companyid, String password) throws Exception {

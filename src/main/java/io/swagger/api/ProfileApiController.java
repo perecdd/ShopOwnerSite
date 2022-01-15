@@ -12,6 +12,7 @@ import io.swagger.v3.oas.annotations.media.ArraySchema;
 import io.swagger.v3.oas.annotations.media.Content;
 import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.security.SecurityRequirement;
+import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
 import org.json.simple.parser.JSONParser;
 import org.slf4j.Logger;
@@ -51,11 +52,13 @@ public class ProfileApiController implements ProfileApi {
         this.request = request;
     }
 
-    public ResponseEntity<List<Product>> getProfile(@Parameter(in = ParameterIn.HEADER, description = "" ,schema=@Schema()) @RequestHeader(value="companyid", required=false) Integer companyid,@Parameter(in = ParameterIn.HEADER, description = "" ,schema=@Schema()) @RequestHeader(value="password", required=false) String password) {
+    public ResponseEntity<List<Product>> getProfile(@Parameter(in = ParameterIn.HEADER, description = "" ,schema=@Schema()) @RequestHeader(value="email", required=false) String email,@Parameter(in = ParameterIn.HEADER, description = "" ,schema=@Schema()) @RequestHeader(value="password", required=false) String password) {
         String accept = request.getHeader("Accept");
 
+        System.out.println(email + " " + password);
+
         if (accept != null && accept.contains("application/json")) {
-            String result = ShopOwnerSide.getAllProductsByCompanyid(companyid).toString();
+            String result = ShopOwnerSide.getAllProductsByEmail(email).toString();
             try {
                 if (result != null) {
                     return new ResponseEntity<List<Product>>(objectMapper.readValue(result, List.class), HttpStatus.OK);
@@ -86,11 +89,26 @@ public class ProfileApiController implements ProfileApi {
         }
     }
 
-    public ResponseEntity<Void> putProfile(@Parameter(in = ParameterIn.HEADER, description = "" ,schema=@Schema()) @RequestHeader(value="companyid", required=false) Integer companyid,@Parameter(in = ParameterIn.HEADER, description = "" ,schema=@Schema()) @RequestHeader(value="password", required=false) String password,@Parameter(in = ParameterIn.DEFAULT, description = "", schema=@Schema()) @Valid @RequestBody ProfileBody body) {
+    public ResponseEntity<Void> putProfile(@Parameter(in = ParameterIn.HEADER, description = "" ,schema=@Schema()) @RequestHeader(value="email", required=false) String email,@Parameter(in = ParameterIn.HEADER, description = "" ,schema=@Schema()) @RequestHeader(value="password", required=false) String password,@Parameter(in = ParameterIn.DEFAULT, description = "", schema=@Schema()) @Valid @RequestBody ProfileBody body) {
         String accept = request.getHeader("Accept");
         try {
-            JSONParser jsonParser = new JSONParser();
-            if (ShopOwnerSide.updateProducts(companyid, password, (JSONObject)(jsonParser.parse(body.toString())))) {
+            JSONObject jsonObject = new JSONObject();
+            JSONArray products = new JSONArray();
+
+            for(Product product : body.getProducts()){
+                JSONObject jsonObject1 = new JSONObject();
+                jsonObject1.put("Photo", product.getPhoto());
+                jsonObject1.put("companyid", product.getCompanyid());
+                jsonObject1.put("count", product.getCount());
+                jsonObject1.put("description", product.getDescription());
+                jsonObject1.put("name", product.getName());
+                jsonObject1.put("price", product.getPrice());
+                jsonObject1.put("productid", product.getProductid());
+                products.add(jsonObject1);
+            }
+            jsonObject.put("products", products);
+
+            if (ShopOwnerSide.updateProducts(email, password, jsonObject)) {
                 return new ResponseEntity<Void>(HttpStatus.OK);
             } else {
                 return new ResponseEntity<Void>(HttpStatus.BAD_REQUEST);
@@ -99,6 +117,17 @@ public class ProfileApiController implements ProfileApi {
         catch (Exception e){
             log.error("Can't register company", e);
             return new ResponseEntity<Void>(HttpStatus.BAD_REQUEST);
+        }
+    }
+
+    public ResponseEntity<Void> checkProfile(@Parameter(in = ParameterIn.HEADER, description = "" ,schema=@Schema()) @RequestHeader(value="email", required=false) String email, @Parameter(in = ParameterIn.HEADER, description = "" ,schema=@Schema()) @RequestHeader(value="password", required=false) String password){
+        String accept = request.getHeader("Accept");
+        System.out.println("checkProfile");
+        if (ShopOwnerSide.checkCompany(email, password)) {
+            return new ResponseEntity<Void>(HttpStatus.OK);
+        }
+        else {
+            return new ResponseEntity<Void>(HttpStatus.UNAUTHORIZED);
         }
     }
 

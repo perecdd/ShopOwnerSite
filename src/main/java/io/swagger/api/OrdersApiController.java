@@ -50,10 +50,10 @@ public class OrdersApiController implements OrdersApi {
         this.request = request;
     }
 
-    public ResponseEntity<List<Order>> getOrders(@Parameter(in = ParameterIn.HEADER, description = "" ,schema=@Schema()) @RequestHeader(value="companyid", required=false) Integer companyid, @Parameter(in = ParameterIn.HEADER, description = "" ,schema=@Schema()) @RequestHeader(value="password", required=false) String password) {
+    public ResponseEntity<List<Order>> getOrders(@Parameter(in = ParameterIn.HEADER, description = "" ,schema=@Schema()) @RequestHeader(value="email", required=false) String email, @Parameter(in = ParameterIn.HEADER, description = "" ,schema=@Schema()) @RequestHeader(value="password", required=false) String password) {
         String accept = request.getHeader("Accept");
         if (accept != null && accept.contains("application/json")) {
-            String result = ShopOwnerSide.getTickets(companyid, password).toString();
+            String result = ShopOwnerSide.getTickets(email, password).toString();
             try {
                 if(result != null) {
                     return new ResponseEntity<List<Order>>(objectMapper.readValue(result, List.class), HttpStatus.OK);
@@ -69,10 +69,10 @@ public class OrdersApiController implements OrdersApi {
         return new ResponseEntity<List<Order>>(HttpStatus.BAD_REQUEST);
     }
 
-    public ResponseEntity<Void> putOrders(@Parameter(in = ParameterIn.HEADER, description = "" ,schema=@Schema()) @RequestHeader(value="companyid", required=true) Integer companyid,@Parameter(in = ParameterIn.HEADER, description = "" ,schema=@Schema()) @RequestHeader(value="password", required=true) String password,@Parameter(in = ParameterIn.HEADER, description = "" ,schema=@Schema()) @RequestHeader(value="index", required=true) Integer index, @Parameter(in = ParameterIn.HEADER, description = "" ,schema=@Schema()) @RequestHeader(value="status", required=true) String status) {
+    public ResponseEntity<Void> putOrders(@Parameter(in = ParameterIn.HEADER, description = "" ,schema=@Schema()) @RequestHeader(value="email", required=true) String email, @Parameter(in = ParameterIn.HEADER, description = "" ,schema=@Schema()) @RequestHeader(value="password", required=true) String password,@Parameter(in = ParameterIn.HEADER, description = "" ,schema=@Schema()) @RequestHeader(value="index", required=true) Integer index, @Parameter(in = ParameterIn.HEADER, description = "" ,schema=@Schema()) @RequestHeader(value="status", required=true) String status) {
         String accept = request.getHeader("Accept");
         try {
-            if (ShopOwnerSide.updateTicket(companyid, password, index, status)) {
+            if (ShopOwnerSide.updateTicket(email, password, index, status)) {
                 return new ResponseEntity<Void>(HttpStatus.OK);
             } else {
                 return new ResponseEntity<Void>(HttpStatus.UNAUTHORIZED);

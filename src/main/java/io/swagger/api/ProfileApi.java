@@ -44,18 +44,28 @@ public interface ProfileApi {
         @ApiResponse(responseCode = "400", description = "Bad Request"),
         
         @ApiResponse(responseCode = "401", description = "Unauthorized") })
-    @RequestMapping(value = "/profile",
+    @RequestMapping(value = "/api/profile",
         produces = { "application/json" }, 
         method = RequestMethod.GET)
-    ResponseEntity<List<Product>> getProfile(@Parameter(in = ParameterIn.HEADER, description = "" ,schema=@Schema()) @RequestHeader(value="companyid", required=false) Integer companyid, @Parameter(in = ParameterIn.HEADER, description = "" ,schema=@Schema()) @RequestHeader(value="password", required=false) String password);
+    ResponseEntity<List<Product>> getProfile(@Parameter(in = ParameterIn.HEADER, description = "" ,schema=@Schema()) @RequestHeader(value="email", required=false) String email, @Parameter(in = ParameterIn.HEADER, description = "" ,schema=@Schema()) @RequestHeader(value="password", required=false) String password);
 
+    @Operation(summary = "Your GET endpoint", description = "Get all products", tags={  })
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "OK"),
+
+            @ApiResponse(responseCode = "400", description = "Bad Request"),
+
+            @ApiResponse(responseCode = "401", description = "Unauthorized") })
+    @RequestMapping(value = "/api/checkProfile",
+            method = RequestMethod.GET)
+    ResponseEntity<Void> checkProfile(@Parameter(in = ParameterIn.HEADER, description = "" ,schema=@Schema()) @RequestHeader(value="companyid", required=false) String email, @Parameter(in = ParameterIn.HEADER, description = "" ,schema=@Schema()) @RequestHeader(value="password", required=false) String password);
 
     @Operation(summary = "", description = "register company in system", tags={  })
     @ApiResponses(value = { 
         @ApiResponse(responseCode = "200", description = "OK"),
         
         @ApiResponse(responseCode = "400", description = "Bad Request") })
-    @RequestMapping(value = "/profile",
+    @RequestMapping(value = "/api/profile",
         method = RequestMethod.POST)
     ResponseEntity<Void> postProfile(@Parameter(in = ParameterIn.HEADER, description = "" ,schema=@Schema()) @RequestHeader(value="companyid", required=false) Integer companyid, @Parameter(in = ParameterIn.HEADER, description = "" ,schema=@Schema()) @RequestHeader(value="password", required=false) String password);
 
@@ -67,10 +77,10 @@ public interface ProfileApi {
         @ApiResponse(responseCode = "400", description = "Bad Request"),
         
         @ApiResponse(responseCode = "401", description = "Unauthorized") })
-    @RequestMapping(value = "/profile",
+    @RequestMapping(value = "/api/profile",
         consumes = { "application/json" }, 
         method = RequestMethod.PUT)
-    ResponseEntity<Void> putProfile(@Parameter(in = ParameterIn.HEADER, description = "" ,schema=@Schema()) @RequestHeader(value="companyid", required=false) Integer companyid, @Parameter(in = ParameterIn.HEADER, description = "" ,schema=@Schema()) @RequestHeader(value="password", required=false) String password, @Parameter(in = ParameterIn.DEFAULT, description = "", schema=@Schema()) @Valid @RequestBody ProfileBody body);
+    ResponseEntity<Void> putProfile(@Parameter(in = ParameterIn.HEADER, description = "" ,schema=@Schema()) @RequestHeader(value="email", required=false) String email, @Parameter(in = ParameterIn.HEADER, description = "" ,schema=@Schema()) @RequestHeader(value="password", required=false) String password, @Parameter(in = ParameterIn.DEFAULT, description = "", schema=@Schema()) @Valid @RequestBody ProfileBody body);
 
 }
 
