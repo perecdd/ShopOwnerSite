@@ -60,6 +60,11 @@
       </div></header>
 
   <script>
+      var companyID;
+      var indexOfNewProduct;
+      var Email
+      var Password
+
       async function login(){
           let it = document.cookie.split('; ');
           let email = '';
@@ -67,15 +72,15 @@
           for(let i = 0; i < it.length; i++){
               let submass = it[i].split('=');
               if(submass[0] === 'passwordO') {
-                  password = submass[1];
+                  Password = submass[1];
               }
               if(submass[0] === 'emailO') {
-                  email = submass[1];
+                  Email = submass[1];
               }
           }
 
-          if(email !== '' && password !== ''){
-              find(email, password);
+          if(Email !== '' && Password !== ''){
+              find(Email, Password);
           }
           else{
               window.location.replace("/register");
@@ -105,7 +110,9 @@
               let json = await response.json();
               let result = JSON.stringify(json)
               let mass = JSON.parse(result);
+              companyID = mass[0]["companyid"]; // TODO: Закидывать по умолчанию hello-world продукт во все таблицы при создании. Его нельзя удалить, только изменить.
               for(let i = 0; i < result.length; i++){
+                  indexOfNewProduct = i;
                   addCode(mass[i]["Photo"], mass[i]["companyid"], mass[i]["count"], mass[i]["description"], mass[i]["name"], mass[i]["price"], mass[i]["productid"]);
               }
           } else {
@@ -133,61 +140,33 @@
 
   <style>
       #zatemnenie:target {
-
           display: block;
-
       }
-
       #zatemnenie {
-
           background: rgba(102, 102, 102, 0.68);
-
           width: 100%;
-
           height: 100%;
-
           position: fixed;
-
           top: 0;
-
           left: 0;
-
           display: none;
-
           z-index: 9999999999;
-
       }
-
       window {
-
           position: absolute;
-
           top: 50%;
-
           left: 50%;
-
           width: 400px;
-
           border: 1px solid #cecece;
-
           padding: 50px;
-
           transform: translate(-50%,-50%);
-
           background-color: #fafafa;
-
       }
-
       div#main_text a.close_window {
-
           position: absolute;
-
           right: 10px;
-
           top: 4px;
-
           border: none;
-
       }
   </style>
 
@@ -202,31 +181,63 @@
       </div>
         <div id="zatemnenie">
             <window>
-                <form action="#" method="POST" class="u-clearfix u-form-spacing-15 u-form-vertical u-inner-form" style="padding: 15px;" source="custom" name="form">
+                <button onclick="location.hash =''" type="button">x</button>
+                <p align="center">Введите данные вашего товара</p>
+                <form id="form-0" action="#" class="u-clearfix u-form-spacing-15 u-form-vertical u-inner-form" style="padding: 15px;" source="custom" name="form" onsubmit="return addToDB()">
                     <div class="u-form-group u-form-group-1">
-                        <label for="text-1b1e" class="u-form-control-hidden u-label"></label>
-                        <input type="text" placeholder="Название товара (точное)" id="text-1b1e" name="text" class="u-border-1 u-border-grey-30 u-input u-input-rectangle">
+                        <label for="text-0" class="u-form-control-hidden u-label"></label>
+                        <input type="text" placeholder="Название товара" id="text-0" name="text" class="u-border-1 u-border-grey-30 u-input u-input-rectangle" required>
                     </div>
                     <div class="u-form-group u-form-group-2">
-                        <label for="text-e36c" class="u-form-control-hidden u-label"></label>
-                        <input type="text" placeholder="Минимальная цена" id="text-e36c" name="text-1" class="u-border-1 u-border-grey-30 u-input u-input-rectangle">
+                        <label for="text-1" class="u-form-control-hidden u-label"></label>
+                        <input type="number" placeholder="Цена" id="text-1" name="text-1" class="u-border-1 u-border-grey-30 u-input u-input-rectangle" required>
                     </div>
                     <div class="u-form-group u-form-group-3">
-                        <label for="text-2219" class="u-form-control-hidden u-label"></label>
-                        <input type="text" placeholder="Максимальная цена" id="text-2219" name="text-2" class="u-border-1 u-border-grey-30 u-input u-input-rectangle">
+                        <label for="text-2" class="u-form-control-hidden u-label"></label>
+                        <input type="number" placeholder="Количество" id="text-2" name="text-2" class="u-border-1 u-border-grey-30 u-input u-input-rectangle" required>
                     </div>
                     <div class="u-form-group u-form-group-4">
-                        <label for="text-c555" class="u-form-control-hidden u-label"></label>
-                        <input type="text" placeholder="Количество" id="text-c555" name="text-3" class="u-border-1 u-border-grey-30 u-input u-input-rectangle">
+                        <label for="text-3" class="u-form-control-hidden u-label"></label>
+                        <input type="text" placeholder="Описание" id="text-3" name="text-3" class="u-border-1 u-border-grey-30 u-input u-input-rectangle"required>
+                    </div>
+                    <div class="u-form-group u-form-group-4">
+                        <label for="text-4" class="u-form-control-hidden u-label"></label>
+                        <input type="text" placeholder="Ссылка на фото" id="text-4" name="text-4" class="u-border-1 u-border-grey-30 u-input u-input-rectangle" required>
                     </div>
                     <div class="u-align-center u-form-group u-form-submit u-form-group-5">
-                        <a href="#" class="u-btn u-btn-submit u-button-style">Искать</a>
-                        <input onclick="" type="submit" value="submit" class="u-form-control-hidden">
+                        <input type="submit" value='submit'>
                     </div>
                 </form>
-                <a href="#close_window" class="close_window">X</a>
             </window>
         </div>
+
+        <script>
+            async function addToDB(){
+                let name = document.getElementById('text-0').value;
+                let price = document.getElementById('text-1').value;
+                let count = document.getElementById('text-2').value;
+                let description = document.getElementById('text-3').value;
+                let photo = document.getElementById('text-4').value;
+
+                let url = 'http://localhost:9191/api/profile';
+                let xhr = new XMLHttpRequest();
+                xhr.open("PUT", url);
+                xhr.setRequestHeader("Content-type", "application/json");
+                xhr.setRequestHeader('email', Email);
+                xhr.setRequestHeader('password', Password);
+                let javaObj = {};
+                javaObj.products = [{ "Photo": photo, "companyid": companyID,
+                    "count": count, "description": description,
+                    "name": name, "price": price,
+                    "productid": indexOfNewProduct + 1 }];
+
+                let data = JSON.stringify(javaObj);
+                xhr.send(data);
+                addCode(photo, companyID, count, description, name, price, indexOfNewProduct + 1);
+                indexOfNewProduct++;
+                location.hash ='';
+            }
+        </script>
 
         <div class="u-align-center u-form-group u-form-submit">
             <a onclick="location.hash ='zatemnenie'" class="u-btn u-btn-submit u-button-style">Добавить продукт в базу данных</a>
