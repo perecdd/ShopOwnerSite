@@ -155,13 +155,13 @@ public class ShopOwnerSide {
         return responseCode == 202;
     }
 
-    public static boolean registerCompany(Integer companyid, String password) throws Exception {
+    public static boolean registerCompany(String email, String password) throws Exception {
         URL url = new URL(ip + ":" + port + "/storage");
         con = (HttpURLConnection) url.openConnection();
         con.setRequestProperty("User-Agent", "ShopOwnerApplication");
         con.setRequestProperty("Content-Type", "application/json; charset=UTF-8");
         con.setRequestProperty("Accept", "application/json");
-        con.setRequestProperty("companyid", String.valueOf(companyid));
+        con.setRequestProperty("email", email);
         con.setRequestProperty("password", password);
         con.setRequestMethod("POST");
         con.setDoOutput(true);

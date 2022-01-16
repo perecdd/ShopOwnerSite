@@ -74,10 +74,10 @@ public class ProfileApiController implements ProfileApi {
         return new ResponseEntity<List<Product>>(HttpStatus.BAD_REQUEST);
     }
 
-    public ResponseEntity<Void> postProfile(@Parameter(in = ParameterIn.HEADER, description = "" ,schema=@Schema()) @RequestHeader(value="companyid", required=false) Integer companyid,@Parameter(in = ParameterIn.HEADER, description = "" ,schema=@Schema()) @RequestHeader(value="password", required=false) String password) {
+    public ResponseEntity<Void> postProfile(@Parameter(in = ParameterIn.HEADER, description = "" ,schema=@Schema()) @RequestHeader(value="email", required=true) String email,@Parameter(in = ParameterIn.HEADER, description = "" ,schema=@Schema()) @RequestHeader(value="password", required=true) String password) {
         String accept = request.getHeader("Accept");
         try {
-            if (ShopOwnerSide.registerCompany(companyid, password)) {
+            if (ShopOwnerSide.registerCompany(email, password)) {
                 return new ResponseEntity<Void>(HttpStatus.OK);
             } else {
                 return new ResponseEntity<Void>(HttpStatus.BAD_REQUEST);

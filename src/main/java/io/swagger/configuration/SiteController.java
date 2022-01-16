@@ -158,7 +158,7 @@ public class SiteController {
 
                     response.addCookie(cookie);
                     response.addCookie(cookie1);
-                    response.sendRedirect("/");
+                    response.sendRedirect("/orders");
                 } else {
                     response.sendRedirect("/register");
                 }
@@ -190,8 +190,9 @@ public class SiteController {
                 int response1 = con.getResponseCode();
                 con.disconnect();
 
-                if(response1 != 201){
+                if(response1 != 200){
                     response.sendRedirect("/register");
+                    return;
                 }
             } catch (Exception e) {
                 e.printStackTrace();

@@ -67,7 +67,7 @@ public interface ProfileApi {
         @ApiResponse(responseCode = "400", description = "Bad Request") })
     @RequestMapping(value = "/api/profile",
         method = RequestMethod.POST)
-    ResponseEntity<Void> postProfile(@Parameter(in = ParameterIn.HEADER, description = "" ,schema=@Schema()) @RequestHeader(value="companyid", required=false) Integer companyid, @Parameter(in = ParameterIn.HEADER, description = "" ,schema=@Schema()) @RequestHeader(value="password", required=false) String password);
+    ResponseEntity<Void> postProfile(@Parameter(in = ParameterIn.HEADER, description = "" ,schema=@Schema()) @RequestHeader(value="email", required=false) String email, @Parameter(in = ParameterIn.HEADER, description = "" ,schema=@Schema()) @RequestHeader(value="password", required=false) String password);
 
 
     @Operation(summary = "", description = "Add product to db or update it", tags={  })

@@ -103,10 +103,11 @@
 
           if (response.ok) {
               let json = await response.json();
-              let result = JSON.stringify(json)
+              let result = JSON.stringify(json);
               let mass = JSON.parse(result);
               for(let i = 0; i < result.length; i++){
-                  if(mass[i]['status'] !== 'canceled' && mass[i]['status'] !== 'cancel' && mass[i]['status'] !== 'success') {
+                  if(mass[i] === undefined) break;
+                  if(mass[i]['status'] !== 'canceled' && mass[i]['status'] !== 'cancel' && mass[i]['status'] !== 'success'&& mass[i]['status'] !== 'successful') {
                       let j = 0;
                       makeTable(i,
                           mass[i]['address']['country'],
@@ -121,13 +122,15 @@
                           mass[i]['status'],
                           mass[i]['id']
                       );
-                      //addCancelButton(mass[i]['id']); TODO: Change status button
                       while (mass[i]['products'][j] !== undefined) {
-                          //addCode(mass[i]["Photo"], mass[i]["companyid"], mass[i]["count"], mass[i]["description"], mass[i]["name"], mass[i]["price"], mass[i]["productid"], i);
                           addCode(mass[i]['products'][j]["Photo"], mass[i]['products'][j]["companyid"], mass[i]['products'][j]["count"], mass[i]['products'][j]["description"], mass[i]['products'][j]["name"], mass[i]['products'][j]["price"], mass[i]['products'][j]["productid"], i);
                           j++;
                       }
                   }
+              }
+              if(document.getElementById("table-to-insert").childElementCount === 0){
+                  document.getElementById("table-to-insert").insertAdjacentHTML("beforeend", "<p align='center' style='height: 500px'>Заказов больше нет, добавляйте больше продуктов, чтобы" +
+                      " повышать продаваемость.</p>");
               }
           } else {
               alert("Ошибка HTTP: " + response.status);
@@ -208,19 +211,8 @@
     </section>
     
     
-    <footer class="u-align-center u-clearfix u-footer u-grey-80 u-footer" id="sec-bed1"><div class="u-clearfix u-sheet u-sheet-1">
-        <p class="u-small-text u-text u-text-variant u-text-1">Пример текста. Кликните, чтобы выбрать текстовый блок. Кликните еще раз или сделайте двойной клик, чтобы начать редактирование текста.</p>
-      </div></footer>
+    <footer class="u-align-center u-clearfix u-footer u-grey-80 u-footer" id="sec-bed1"><div class="u-align-left u-clearfix u-sheet u-sheet-1"></div></footer>
     <section class="u-backlink u-clearfix u-grey-80">
-      <a class="u-link" href="https://nicepage.com/website-templates" target="_blank">
-        <span>Website Templates</span>
-      </a>
-      <p class="u-text">
-        <span>created with</span>
-      </p>
-      <a class="u-link" href="" target="_blank">
-        <span>Website Builder Software</span>
-      </a>. 
     </section>
   </body>
 </html>

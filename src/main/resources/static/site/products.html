@@ -111,8 +111,9 @@
               let json = await response.json();
               let result = JSON.stringify(json)
               let mass = JSON.parse(result);
-              companyID = mass[0]["companyid"]; // TODO: Закидывать по умолчанию hello-world продукт во все таблицы при создании. Его нельзя удалить, только изменить.
+              companyID = mass[0]["companyid"];
               for(let i = 0; i < result.length; i++){
+                  if(mass[i] === undefined) break;
                   indexOfNewProduct = i;
                   addCode(mass[i]["Photo"], mass[i]["companyid"], mass[i]["count"], mass[i]["description"], mass[i]["name"], mass[i]["price"], mass[i]["productid"]);
               }
@@ -206,7 +207,7 @@
                 document.getElementById('text-11').placeholder = "Цена: " + price;
                 document.getElementById('text-21').placeholder = "Количество: " + count;
                 document.getElementById('text-31').placeholder = "Описание: " + description;
-                document.getElementById('text-41').placeholder = "Фото:" + photo;
+                document.getElementById('text-41').placeholder = "Фото: " + photo;
 
                 Gname = name;
                 Gprice = price;
@@ -353,19 +354,8 @@
     </section>
     
     
-    <footer class="u-align-center u-clearfix u-footer u-grey-80 u-footer" id="sec-bed1"><div class="u-clearfix u-sheet u-sheet-1">
-        <p class="u-small-text u-text u-text-variant u-text-1">Пример текста. Кликните, чтобы выбрать текстовый блок. Кликните еще раз или сделайте двойной клик, чтобы начать редактирование текста.</p>
-      </div></footer>
+    <footer class="u-align-center u-clearfix u-footer u-grey-80 u-footer" id="sec-bed1"><div class="u-align-left u-clearfix u-sheet u-sheet-1"></div></footer>
     <section class="u-backlink u-clearfix u-grey-80">
-      <a class="u-link" href="https://nicepage.com/website-design" target="_blank">
-        <span>Website Design</span>
-      </a>
-      <p class="u-text">
-        <span>created with</span>
-      </p>
-      <a class="u-link" href="" target="_blank">
-        <span>Website Design Software</span>
-      </a>. 
     </section>
   </body>
 </html>
