@@ -106,7 +106,7 @@
               let result = JSON.stringify(json)
               let mass = JSON.parse(result);
               for(let i = 0; i < result.length; i++){
-                  if(mass[i]['status'] !== 'canceled' && mass[i]['status'] !== 'success') {
+                  if(mass[i]['status'] !== 'canceled' && mass[i]['status'] !== 'cancel' && mass[i]['status'] !== 'success') {
                       let j = 0;
                       makeTable(i,
                           mass[i]['address']['country'],
@@ -149,7 +149,7 @@
               "<tr><td>Эл. почта</td><td>"+email+"</td></tr>\n" +
               "<tr><td>Имя</td><td>"+username+"</td></tr>\n" +
               "<tr><td>Фамилия</td><td>"+surname+"</td></tr>\n" +
-              "<tr><td>Статус</td><td>"+ orderStatus +"</td></tr>\n" +
+              "<tr><td>Статус</td><td><textarea id=\"textArea-"+id+"\" style='width: 100%'>"+ orderStatus +"</textarea><button onclick=\"updateStatus('"+id+"', '"+id+"')\">Принять</button></td></tr>\n" +
               "</table>" +
               "          <div id=\"table-to-insert-" + table_id + "\" class=\"u-repeater u-repeater-1\">\n" +
               "          </div>\n" +
@@ -157,6 +157,32 @@
               "      </div>");
       }
 
+      function updateStatus(id, statusElementId){
+          let it = document.cookie.split('; ');
+          let email = '';
+          let password = '';
+          for(let i = 0; i < it.length; i++){
+              let submass = it[i].split('=');
+              if(submass[0] === 'passwordO') {
+                  password = submass[1];
+              }
+              if(submass[0] === 'emailO') {
+                  email = submass[1];
+              }
+          }
+
+          if(email !== '' && password !== '' && document.getElementById('textArea-' + statusElementId).value !== ''){
+              let url = 'http://localhost:9191/api/orders';
+              let xhr = new XMLHttpRequest();
+              xhr.open("PUT", url);
+              xhr.setRequestHeader("Content-type", "application/json");
+              xhr.setRequestHeader('email', email);
+              xhr.setRequestHeader('password', password);
+              xhr.setRequestHeader('index', id);
+              xhr.setRequestHeader('status', document.getElementById('textArea-' + statusElementId).value);
+              xhr.send();
+          }
+      }
 
       function addCode(Photo, companyid, count, description, name, price, productid, table_id) {
           document.getElementById("table-to-insert-" + table_id).insertAdjacentHTML("beforeend", "" +
