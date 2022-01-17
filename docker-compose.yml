@@ -1,0 +1,15 @@
+services:
+  site-shopownerside:
+    container_name: site-shopownerside
+    build:
+      context: . .
+      dockerfile: ./Dockerfile
+    ports:
+      - "9191:9191"
+    networks:
+      - shared-network
+    volumes:
+      - /volumes/site-shopownerside
+networks:
+  shared-network:
+    external: true

@@ -11,7 +11,7 @@ import java.net.URL;
 
 public class ShopOwnerSide {
     public final static Integer port = 15676;
-    public final static String ip = "http://localhost"; // TODO http://shopownerside
+    public final static String ip = "http://shopownerside";
     public static HttpURLConnection con;
 
     public static JSONArray getTickets(String email, String password){
