@@ -38,23 +38,25 @@ import java.util.Map;
 @Validated
 public interface OrdersApi {
 
-    @Operation(summary = "Your GET endpoint", description = "get all orders", tags={  })
+    @Operation(summary = "Receives all orders in the name of the company", description = "Allows the company to receive all orders in its name, and for each order in particular to view the status, ordered products, customer contacts. It is necessary to prepare the user's order and contact him.", tags={  })
     @ApiResponses(value = {
             @ApiResponse(responseCode = "200", description = "OK", content = @Content(mediaType = "application/json", array = @ArraySchema(schema = @Schema(implementation = Order.class)))),
-
+            @ApiResponse(responseCode = "401", description = "Unauthorized"),
             @ApiResponse(responseCode = "400", description = "Bad Request") })
     @RequestMapping(value = "/api/orders",
         produces = { "application/json" }, 
         method = RequestMethod.GET)
-    ResponseEntity<List<Order>> getOrders(@Parameter(in = ParameterIn.HEADER, description = "" ,schema=@Schema()) @RequestHeader(value="email", required=false) String email, @Parameter(in = ParameterIn.HEADER, description = "" ,schema=@Schema()) @RequestHeader(value="password", required=false) String password);
+    ResponseEntity<List<Order>> getOrders(@Parameter(in = ParameterIn.HEADER, description = "The email address of the registered company for its identification in the database." ,schema=@Schema()) @RequestHeader(value="email", required=true) String email, @Parameter(in = ParameterIn.HEADER, description = "Company password." ,schema=@Schema()) @RequestHeader(value="password", required=true) String password);
 
 
-    @Operation(summary = "", description = "update order status", tags={  })
-    @ApiResponses(value = { 
+    @Operation(summary = "Updates the order status", description = "The request allows you to change its status for the user and the company for one order. It is important that if you need to cancel an order, then you need to change the status to \"cancel\" or \"cancelled\", in which case it will become unavailable to the user and the company. If the order was successfully delivered, it is necessary to specify the status \"success\", then the user will be able to evaluate the quality of the company's work in addition.", tags={  })
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "401", description = "Unauthorized"),
+            @ApiResponse(responseCode = "400", description = "Bad Request"),
         @ApiResponse(responseCode = "200", description = "OK") })
     @RequestMapping(value = "/api/orders",
         method = RequestMethod.PUT)
-    ResponseEntity<Void> putOrders(@Parameter(in = ParameterIn.HEADER, description = "" ,schema=@Schema()) @RequestHeader(value="email", required=true) String email, @Parameter(in = ParameterIn.HEADER, description = "" ,schema=@Schema()) @RequestHeader(value="password", required=true) String password, @Parameter(in = ParameterIn.HEADER, description = "" ,schema=@Schema()) @RequestHeader(value="index", required=true) Integer index, @Parameter(in = ParameterIn.HEADER, description = "" ,schema=@Schema()) @RequestHeader(value="status", required=true) String status);
+    ResponseEntity<Void> putOrders(@Parameter(in = ParameterIn.HEADER, description = "The email address of the registered company for its identification in the database." ,schema=@Schema()) @RequestHeader(value="email", required=true) String email, @Parameter(in = ParameterIn.HEADER, description = "Company password." ,schema=@Schema()) @RequestHeader(value="password", required=true) String password, @Parameter(in = ParameterIn.HEADER, description = "Order ID." ,schema=@Schema()) @RequestHeader(value="index", required=true) Integer index, @Parameter(in = ParameterIn.HEADER, description = "New status for this order." ,schema=@Schema()) @RequestHeader(value="status", required=true) String status);
 
 }
 

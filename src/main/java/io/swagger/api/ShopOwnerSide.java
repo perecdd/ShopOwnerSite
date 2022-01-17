@@ -113,6 +113,44 @@ public class ShopOwnerSide {
         }
     }
 
+    public static JSONObject getRating(String email){
+        try {
+            URL url = new URL (ip + ":" + port + "/rating");
+
+            con = (HttpURLConnection)url.openConnection();
+            con.setRequestProperty("Content-Type", "application/json; charset=UTF-8");
+            con.setRequestProperty("Accept", "application/json");
+            con.setRequestProperty("email", email);
+            con.setRequestMethod("GET");
+            con.setDoOutput(true);
+            con.setDoInput(true);
+
+            BufferedReader br = new BufferedReader(new InputStreamReader(con.getInputStream()));
+            StringBuilder sb = new StringBuilder();
+            String line;
+            while ((line = br.readLine()) != null) {
+                sb.append(line+"\n");
+            }
+
+            JSONParser parser = new JSONParser();
+            JSONObject jsonObject = (JSONObject) parser.parse(sb.toString());
+
+            int responseCode = con.getResponseCode();
+            con.disconnect();
+
+            if(responseCode == 200) {
+                return jsonObject;
+            }
+            else{
+                return null;
+            }
+        }
+        catch (Exception e){
+            e.printStackTrace();
+            return null;
+        }
+    }
+
     public static boolean checkCompany(String email, String password){
         try {
             System.out.println(email + " " + password);
@@ -155,12 +193,13 @@ public class ShopOwnerSide {
         return responseCode == 202;
     }
 
-    public static boolean registerCompany(String email, String password) throws Exception {
+    public static boolean registerCompany(String name, String email, String password) throws Exception {
         URL url = new URL(ip + ":" + port + "/storage");
         con = (HttpURLConnection) url.openConnection();
         con.setRequestProperty("User-Agent", "ShopOwnerApplication");
         con.setRequestProperty("Content-Type", "application/json; charset=UTF-8");
         con.setRequestProperty("Accept", "application/json");
+        con.setRequestProperty("name", name);
         con.setRequestProperty("email", email);
         con.setRequestProperty("password", password);
         con.setRequestMethod("POST");

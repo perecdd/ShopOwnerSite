@@ -66,6 +66,10 @@
           <form action="#" method="POST" class="u-clearfix u-form-spacing-10 u-form-vertical u-inner-form" source="custom" name="form" style="padding: 10px;">
             <input type="hidden" id="siteId1" name="siteId" value="311417551">
             <input type="hidden" id="pageId2" name="pageId" value="135315050">
+            <div class="u-form-group u-form-group-2">
+                <label for="text-44ba" class="u-form-control-hidden u-label"></label>
+                <input type="text" placeholder="Введите название вашей компании" id="text-44ba4" name="companyName" class="u-border-1 u-border-grey-30 u-input u-input-rectangle u-white">
+            </div>
             <div class="u-form-email u-form-group">
               <label for="email-49bf" class="u-form-control-hidden u-label"></label>
               <input type="email" placeholder="Введите Ваш email адрес" id="email-49bf4" name="email" class="u-border-1 u-border-grey-30 u-input u-input-rectangle u-white" required="">
@@ -76,7 +80,7 @@
             </div>
             <div class="u-align-left u-form-group u-form-submit">
               <a href="#" class="u-btn u-btn-submit u-button-style">Отправить</a>
-              <input onclick="window.location.href = 'http://localhost:9191/reg?email='.concat(email.value, '&password=', password.value);" type="submit" value="submit" class="u-form-control-hidden">
+              <input onclick="window.location.href = 'http://localhost:9191/reg?email='.concat(email.value, '&password=', password.value, '&name=', companyName.value);" type="submit" value="submit" class="u-form-control-hidden">
             </div>
           </form>
         </div>

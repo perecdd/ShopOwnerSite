@@ -128,7 +128,23 @@
                       }
                   }
               }
-              if(document.getElementById("table-to-insert").childElementCount === 0){
+
+              let url1 = 'http://localhost:9191/api/rating';
+              let response1 = await fetch(url1, {
+                  method: 'GET',
+                  headers: {
+                      'email': email
+                  }
+              });
+              let Json = await response1.json();
+              let Result = JSON.stringify(Json)
+              let Mass = JSON.parse(Result);
+
+              let haveAnotherElements = document.getElementById("table-to-insert").childElementCount === 0;
+              document.getElementById("table-to-insert").insertAdjacentHTML("beforeend", "<table width='auto' align='center' border='1px'><tr><td>Название вашей компании</td><td>" + Mass['name'] + "</td></tr>" +
+                  "<tr><td>Рейтинг вашей компании</td><td>" + Number(Mass['rating']).toFixed(1) + "/10</td></tr>" +
+                  "</table>");
+              if(haveAnotherElements){
                   document.getElementById("table-to-insert").insertAdjacentHTML("beforeend", "<p align='center' style='height: 500px'>Заказов больше нет, добавляйте больше продуктов, чтобы" +
                       " повышать продаваемость.</p>");
               }

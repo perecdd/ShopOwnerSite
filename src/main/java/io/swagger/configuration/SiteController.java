@@ -174,13 +174,16 @@ public class SiteController {
         response.setHeader("Pragma", "no-cache"); // HTTP 1.0.
         response.setHeader("Expires", "0"); // Proxies.
 
-        if(requestParams.containsKey("email") && requestParams.containsKey("password")) {
+        if(requestParams.containsKey("email") &&
+                requestParams.containsKey("password") &&
+                requestParams.containsKey("name")) {
             try {
                 HttpURLConnection con;
                 URL url = new URL("http://localhost:9191/api/profile");
                 con = (HttpURLConnection) url.openConnection();
                 con.setRequestProperty("Content-Type", "application/json; charset=UTF-8");
                 con.setRequestProperty("Accept", "application/json");
+                con.setRequestProperty("name", requestParams.get("name"));
                 con.setRequestProperty("email", requestParams.get("email"));
                 con.setRequestProperty("password", requestParams.get("password"));
                 con.setRequestMethod("POST");

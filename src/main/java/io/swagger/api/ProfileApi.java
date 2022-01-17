@@ -7,6 +7,7 @@ package io.swagger.api;
 
 import io.swagger.model.Product;
 import io.swagger.model.ProfileBody;
+import io.swagger.model.Rating;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.enums.ParameterIn;
@@ -37,7 +38,7 @@ import java.util.Map;
 @Validated
 public interface ProfileApi {
 
-    @Operation(summary = "Your GET endpoint", description = "Get all products", tags={  })
+    @Operation(summary = "Getting all the company's products.", description = "Allows you to get information about the entire product database for a specific company, so that you can then change or add products to it.", tags={  })
     @ApiResponses(value = { 
         @ApiResponse(responseCode = "200", description = "OK", content = @Content(mediaType = "application/json", array = @ArraySchema(schema = @Schema(implementation = Product.class)))),
         
@@ -47,30 +48,27 @@ public interface ProfileApi {
     @RequestMapping(value = "/api/profile",
         produces = { "application/json" }, 
         method = RequestMethod.GET)
-    ResponseEntity<List<Product>> getProfile(@Parameter(in = ParameterIn.HEADER, description = "" ,schema=@Schema()) @RequestHeader(value="email", required=false) String email, @Parameter(in = ParameterIn.HEADER, description = "" ,schema=@Schema()) @RequestHeader(value="password", required=false) String password);
+    ResponseEntity<List<Product>> getProfile(@Parameter(in = ParameterIn.HEADER, description = "The email address of the registered company for its identification in the database." ,schema=@Schema()) @RequestHeader(value="email", required=true) String email, @Parameter(in = ParameterIn.HEADER, description = "Company password" ,schema=@Schema()) @RequestHeader(value="password", required=true) String password);
 
-    @Operation(summary = "Your GET endpoint", description = "Get all products", tags={  })
+    @Operation(summary = "Checking whether the specified company exists.", description = "The request is required for authorization in the system and entry to the order pages and the product database. This request only performs verification, if necessary, other requests will come into play.", tags={  })
     @ApiResponses(value = {
             @ApiResponse(responseCode = "200", description = "OK"),
-
-            @ApiResponse(responseCode = "400", description = "Bad Request"),
-
             @ApiResponse(responseCode = "401", description = "Unauthorized") })
     @RequestMapping(value = "/api/checkProfile",
             method = RequestMethod.GET)
-    ResponseEntity<Void> checkProfile(@Parameter(in = ParameterIn.HEADER, description = "" ,schema=@Schema()) @RequestHeader(value="companyid", required=false) String email, @Parameter(in = ParameterIn.HEADER, description = "" ,schema=@Schema()) @RequestHeader(value="password", required=false) String password);
+    ResponseEntity<Void> checkProfile(@Parameter(in = ParameterIn.HEADER, description = "The email address of the registered company for its identification in the database." ,schema=@Schema()) @RequestHeader(value="email", required=true) String email, @Parameter(in = ParameterIn.HEADER, description = "Company password" ,schema=@Schema()) @RequestHeader(value="password", required=true) String password);
 
-    @Operation(summary = "", description = "register company in system", tags={  })
+    @Operation(summary = "Register a new company in system and create product database.", description = "The request adds a new company with the specified name, email and password to the database. After that, a dedicated table is created - a product database individually for this company. For example, adds \"Hello world!\" the product is included in the database, which can be edited later.", tags={  })
     @ApiResponses(value = { 
         @ApiResponse(responseCode = "200", description = "OK"),
         
         @ApiResponse(responseCode = "400", description = "Bad Request") })
     @RequestMapping(value = "/api/profile",
         method = RequestMethod.POST)
-    ResponseEntity<Void> postProfile(@Parameter(in = ParameterIn.HEADER, description = "" ,schema=@Schema()) @RequestHeader(value="email", required=false) String email, @Parameter(in = ParameterIn.HEADER, description = "" ,schema=@Schema()) @RequestHeader(value="password", required=false) String password);
+    ResponseEntity<Void> postProfile(@Parameter(in = ParameterIn.HEADER, description = "The email address under which the company will log in to the site." ,schema=@Schema()) @RequestHeader(value="email", required=true) String email, @Parameter(in = ParameterIn.HEADER, description = "Password for authorization." ,schema=@Schema()) @RequestHeader(value="password", required=true) String password, @Parameter(in = ParameterIn.HEADER, description = "The name of the company that users will see." ,schema=@Schema()) @RequestHeader(value="name", required=true) String name);
 
 
-    @Operation(summary = "", description = "Add product to db or update it", tags={  })
+    @Operation(summary = "Updates the company's product database", description = "A json containing an array of products is passed. For each product, a check is carried out, if it is already in the database, then it is replaced, if there is no such product yet, then it is added to the company's database.", tags={  })
     @ApiResponses(value = { 
         @ApiResponse(responseCode = "200", description = "OK"),
         
@@ -80,7 +78,6 @@ public interface ProfileApi {
     @RequestMapping(value = "/api/profile",
         consumes = { "application/json" }, 
         method = RequestMethod.PUT)
-    ResponseEntity<Void> putProfile(@Parameter(in = ParameterIn.HEADER, description = "" ,schema=@Schema()) @RequestHeader(value="email", required=false) String email, @Parameter(in = ParameterIn.HEADER, description = "" ,schema=@Schema()) @RequestHeader(value="password", required=false) String password, @Parameter(in = ParameterIn.DEFAULT, description = "", schema=@Schema()) @Valid @RequestBody ProfileBody body);
-
+    ResponseEntity<Void> putProfile(@Parameter(in = ParameterIn.HEADER, description = "The email address of the registered company for its identification in the database." ,schema=@Schema()) @RequestHeader(value="email", required=true) String email, @Parameter(in = ParameterIn.HEADER, description = "Company password" ,schema=@Schema()) @RequestHeader(value="password", required=true) String password, @Parameter(in = ParameterIn.DEFAULT, description = "An object containing an array of products that the company wants to add or update.", schema=@Schema()) @Valid @RequestBody ProfileBody body);
 }
 
