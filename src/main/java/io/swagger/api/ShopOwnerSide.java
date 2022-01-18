@@ -79,7 +79,7 @@ public class ShopOwnerSide {
             con = (HttpURLConnection)url.openConnection();
             con.setRequestProperty("Content-Type", "application/json; charset=UTF-8");
             con.setRequestProperty("Accept", "application/json");
-            con.setRequestProperty("companyEmail", email);
+            con.setRequestProperty("email", email);
             con.setRequestMethod("GET");
             con.setDoOutput(true);
             con.setDoInput(true);

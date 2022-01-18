@@ -141,7 +141,7 @@
               let Mass = JSON.parse(Result);
 
               let haveAnotherElements = document.getElementById("table-to-insert").childElementCount === 0;
-              document.getElementById("table-to-insert").insertAdjacentHTML("beforeend", "<table width='auto' align='center' border='1px'><tr><td>Название вашей компании</td><td>" + Mass['name'] + "</td></tr>" +
+              document.getElementById("table-to-insert").insertAdjacentHTML("afterbegin", "<table width='auto' align='center' border='1px'><tr><td>Название вашей компании</td><td>" + Mass['name'] + "</td></tr>" +
                   "<tr><td>Рейтинг вашей компании</td><td>" + Number(Mass['rating']).toFixed(1) + "/10</td></tr>" +
                   "</table>");
               if(haveAnotherElements){
